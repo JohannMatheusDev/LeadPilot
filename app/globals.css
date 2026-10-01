@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
+/*
+ * Tema do LeadPilot: fundo escuro, verde como única cor de ação.
+ *
+ * O verde é reservado para o que a pessoa pode fazer ou para o que é
+ * oportunidade; status de alerta (atraso) usa âmbar e perigo usa vermelho.
+ * Misturar verde em decoração faria o destaque de "oportunidade" se perder.
+ * O texto suave (#9fb0a6) passa 4.5:1 sobre a superfície, que é o mínimo de
+ * contraste do WCAG AA para texto normal.
+ */
+@theme {
+  --color-fundo: #0a0f0d;
+  --color-superficie: #111916;
+  --color-superficie-2: #17221d;
+  --color-borda: #24332c;
+  --color-texto: #e8f0eb;
+  --color-texto-suave: #9fb0a6;
+  --color-verde: #34d399;
+  --color-verde-forte: #10b981;
+  --color-verde-escuro: #064e3b;
+  --color-alerta: #fbbf24;
+  --color-perigo: #f87171;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-fundo);
+  color: var(--color-texto);
+}
+
+@utility cartao {
+  @apply rounded-2xl border border-borda bg-superficie;
+}
+
+@utility botao {
+  @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility botao-primario {
+  @apply botao bg-verde-forte text-fundo hover:bg-verde;
+}
+@utility botao-secundario {
+  @apply botao border border-borda bg-superficie-2 text-texto hover:border-verde/60;
+}
+@utility botao-fantasma {
+  @apply botao text-texto-suave hover:bg-superficie-2 hover:text-texto;
+}
+@utility botao-perigo {
+  @apply botao border border-perigo/40 text-perigo hover:bg-perigo/10;
+}
+@utility botao-icone {
+  @apply inline-flex size-10 items-center justify-center rounded-xl text-texto-suave transition-colors hover:bg-superficie-2 hover:text-texto focus-visible:outline-2 focus-visible:outline-verde;
+}
+
+@utility campo {
+  @apply block min-h-10 w-full rounded-xl border border-borda bg-fundo px-3 py-2 text-sm text-texto placeholder:text-texto-suave/70 focus:border-verde focus:outline-none focus:ring-2 focus:ring-verde/30 disabled:opacity-60;
+}
+@utility rotulo {
+  @apply mb-1.5 block text-sm font-medium text-texto;
+}
+@utility ajuda {
+  @apply mt-1 text-xs text-texto-suave;
+}
+
+@utility etiqueta {
+  @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium;
+}
+@utility etiqueta-verde {
+  @apply etiqueta border-verde/40 bg-verde/10 text-verde;
+}
+@utility etiqueta-neutra {
+  @apply etiqueta border-borda bg-superficie-2 text-texto-suave;
+}
+@utility etiqueta-alerta {
+  @apply etiqueta border-alerta/40 bg-alerta/10 text-alerta;
+}
+
+/* <dialog> nativo: dá foco preso, Esc para fechar e leitura correta por leitor de tela sem biblioteca. */
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.65);
+  backdrop-filter: blur(2px);
 }
